@@ -1,9 +1,9 @@
-import React from 'react';
-import MainRoutes from './MainRoutes';
-import Navbar from './components/Navbar/Navbar';
-import AuthContextProvider from './contexts/AuthContextProvider';
-import ProductContextProvider from './contexts/ProductContextProvider';
-import CartContextProvider from './contexts/CartContextProvider';
+import React from "react";
+import MainRoutes from "./MainRoutes";
+import Navbar from "./components/Navbar/Navbar";
+import AuthContextProvider from "./contexts/AuthContextProvider";
+import ProductContextProvider from "./contexts/ProductContextProvider";
+import CartContextProvider from "./contexts/CartContextProvider";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
         </ProductContextProvider>
       </CartContextProvider>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

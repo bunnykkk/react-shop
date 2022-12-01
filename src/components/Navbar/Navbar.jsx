@@ -11,23 +11,26 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 // custom
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContextProvider";
 import { useCart } from "../../contexts/CartContextProvider";
+import { useState, useEffect } from "react";
 import Badge from "@mui/material/Badge";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import "../../styles/Navbar.css";
+import "../../styles/Search.css";
 
 const pages = [
   {
-    type: "Products",
-    path: "/products",
-  },
-  {
     type: "Admin",
     path: "/admin",
+  },
+  {
+    type: "Products",
+    path: "/products",
   },
 ];
 const settings = [
@@ -74,6 +77,22 @@ function ResponsiveAppBar() {
   const { logout, user, checkAuth } = useAuth();
   const { cartLength } = useCart();
 
+  // async function render() {
+  //   let { data } = await axios(`${API}/${window.location.search}`);
+  //   setProducts([...data]);
+  // }
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") || "");
+  useEffect(() => {
+    setSearchParams({
+      q: search,
+    });
+  }, [search]);
+  const iiiip = useEffect(() => {
+    // render();
+  }, [searchParams]);
+
   React.useEffect(() => {
     if (localStorage.getItem("token")) {
       checkAuth();
@@ -85,8 +104,11 @@ function ResponsiveAppBar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <LocalMallIcon
+            <img
+              className="logo"
               sx={{ display: { xs: "none", md: "flex" }, mr: 2 }}
+              class="logo"
+              src="https://cdn-icons-png.flaticon.com/512/3460/3460051.png"
             />
             <Typography
               variant="h6"
@@ -102,7 +124,7 @@ function ResponsiveAppBar() {
                 color: "inherit",
                 textDecoration: "none",
               }}>
-              MAGAZINE
+              CORSA™
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -143,9 +165,6 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
-            <LocalMallIcon
-              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            />
             <Typography
               variant="h5"
               noWrap
@@ -161,9 +180,11 @@ function ResponsiveAppBar() {
                 color: "inherit",
                 textDecoration: "none",
               }}>
-              LOGO
+              CORSA™
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Box
+              className="nav-icons"
+              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map(page => (
                 <Button
                   key={page.type}
@@ -180,45 +201,60 @@ function ResponsiveAppBar() {
                   <ShoppingCartOutlinedIcon />
                 </Badge>
               </IconButton>
+              <IconButton
+                size="large"
+                color="inherit"
+                onClick={() => navigate("/favorite")}>
+                <Badge badgeContent={cartLength} color="error">
+                  <BookmarkBorderIcon />
+                </Badge>
+              </IconButton>
             </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Account">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={user[0]} src="..." />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}>
-                {settings.map(setting => (
-                  <MenuItem key={setting.type} onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      onClick={() => navigate(setting.path)}>
-                      {setting.type}
+            <div style={{ marginLeft: "auto", display: "flex" }}>
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search..."
+              />
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Account">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt={user[0]} src="..." />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}>
+                  {settings.map(setting => (
+                    <MenuItem key={setting.type} onClick={handleCloseUserMenu}>
+                      <Typography
+                        textAlign="center"
+                        onClick={() => navigate(setting.path)}>
+                        {setting.type}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" onClick={logout}>
+                      Logout
                     </Typography>
                   </MenuItem>
-                ))}
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" onClick={logout}>
-                    Logout
-                  </Typography>
-                </MenuItem>
-              </Menu>
-            </Box>
+                </Menu>
+              </Box>
+            </div>
           </Toolbar>
         </Container>
       </AppBar>

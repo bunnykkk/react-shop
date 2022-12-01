@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useProducts } from "../../../contexts/ProductContextProvider";
 import ProductCard from "../ProductCard/ProductCard";
 import Pagination from "@mui/material/Pagination";
@@ -28,7 +28,7 @@ const ProductsList = ({ page, setPage, changeSideBarStatus }) => {
     <div>
       <h3>Products List</h3>
 
-      <button onClick={changeSideBarStatus}>Filter&Search Menu</button>
+      <button onClick={changeSideBarStatus}>Filter Menu</button>
 
       {products ? (
         currentData().map(item => <ProductCard key={item.id} item={item} />)
